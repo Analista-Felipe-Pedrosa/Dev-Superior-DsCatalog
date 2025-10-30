@@ -1,42 +1,43 @@
 package com.pedrosa.dscatalog.controller;
 
-import com.pedrosa.dscatalog.dto.CategoryDto;
-import com.pedrosa.dscatalog.entities.Category;
-import com.pedrosa.dscatalog.services.CategoryService;
+import com.pedrosa.dscatalog.dto.ProductDto;
+import com.pedrosa.dscatalog.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
+
 
 @RestController
-@RequestMapping(value = "/categories")
-public class CategoryController {
+@RequestMapping(value = "/products")
+public class ProductController {
 
     @Autowired
-    private CategoryService service;
+    private ProductService service;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> findAll(){
-        return ResponseEntity.ok().body(service.findAll());
+    public ResponseEntity<Page<ProductDto>> findAll(Pageable pageable){
+        return ResponseEntity.ok().body(service.findAll(pageable));
     }
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CategoryDto> findById(@PathVariable Long id){
+    public ResponseEntity<ProductDto> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> insert(@RequestBody CategoryDto dto){
+    public ResponseEntity<ProductDto> insert(@RequestBody ProductDto dto){
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(service.insert(dto));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody CategoryDto dto){
+    public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody ProductDto dto){
         return ResponseEntity.ok().body(service.update(id, dto));
     }
 

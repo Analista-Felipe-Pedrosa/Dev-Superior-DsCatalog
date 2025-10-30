@@ -11,14 +11,27 @@ import java.time.Instant;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<StandardErro> entityNotFound(EntityNotFoundException e, HttpServletRequest request){
+    @ExceptionHandler(ControllerNotFoundException.class)
+    public ResponseEntity<StandardErro> entityNotFound(ControllerNotFoundException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.NOT_FOUND;
         StandardErro err = new StandardErro();
         err.setTimestamp(Instant.now());
-        err.setStatus(HttpStatus.NOT_FOUND.value());
+        err.setStatus(status.value());
         err.setError("Recurso não encontrado");
         err.setMessage(e.getMessage());
         err.setPath(request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardErro> entityNotFound(DatabaseException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardErro err = new StandardErro();
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Data ");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
     }
 }
